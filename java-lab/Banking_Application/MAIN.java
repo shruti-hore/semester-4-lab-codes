@@ -8,17 +8,21 @@ public class MAIN {
 
         Customer currentCustomer = null;
         Account currentAccount = null;
+        LoanAccount loanAccount = null;
 
         while (true) {
             System.out.println("\n1. Add Customer");
             System.out.println("2. Deposit");
             System.out.println("3. Withdraw");
             System.out.println("4. View Accounts");
-            System.out.println("5. Exit");
+            System.out.println("5. View EMI");
+            System.out.println("6. Pay EMI");
+            System.out.println("7. View Loan Balance");
+            System.out.println("0. Exit");
 
             System.out.print("Enter choice: ");
             int choice = sc.nextInt();
-            sc.nextLine(); // consume newline
+            sc.nextLine();
 
             switch (choice) {
 
@@ -48,14 +52,30 @@ public class MAIN {
 
                     System.out.print("Initial Balance: ");
                     double balance = sc.nextDouble();
-                    sc.nextLine();
 
                     currentAccount = new Account(accNum, balance, "Savings");
 
                     currentCustomer.addAccount(currentAccount);
                     bank.addCustomer(currentCustomer);
 
-                    System.out.println("Customer added successfully");
+                    // Loan details
+                    System.out.print("Enter Loan Amount: ");
+                    double principal = sc.nextDouble();
+
+                    System.out.print("Interest Rate (%): ");
+                    double rate = sc.nextDouble();
+
+                    System.out.print("Loan Tenure (months): ");
+                    int tenure = sc.nextInt();
+                    sc.nextLine();
+
+                    loanAccount = new LoanAccount(
+                        accNum, balance, "Loan",
+                        principal, rate, 0,
+                        "Home Loan", 0, "Property", tenure
+                    );
+
+                    System.out.println("Customer & Loan added successfully");
                     break;
 
                 case 2:
@@ -91,6 +111,55 @@ public class MAIN {
                     break;
 
                 case 5:
+                    if (loanAccount == null) {
+                        System.out.println("No loan found");
+                        break;
+                    }
+
+                    double emi = loanAccount.calculateEMI();
+                    System.out.printf("EMI: %.2f\n", emi);
+                    break;
+
+                case 6:
+                    if (loanAccount == null || currentAccount == null) {
+                        System.out.println("Loan or Account missing");
+                        break;
+                    }
+
+                    if (loanAccount.getPrincipalAmt() <= 0) {
+                        System.out.println("Loan already fully paid!");
+                        break;
+                    }
+
+                    double emiPay = loanAccount.calculateEMI();
+
+                    if (currentAccount.withdraw(emiPay)) {
+
+                        double r = (loanAccount.getInterestRate() / 100) / 12;
+                        double interest = loanAccount.getPrincipalAmt() * r;
+                        double principalPaid = emiPay - interest;
+
+                        double newPrincipal = loanAccount.getPrincipalAmt() - principalPaid;
+
+                        if (newPrincipal < 0) newPrincipal = 0;
+
+                        loanAccount.setPrincipalAmt(newPrincipal);
+
+                        System.out.printf("EMI Paid: %.2f\n", emiPay);
+                        System.out.printf("Remaining Loan: %.2f\n", newPrincipal);
+                    }
+                    break;
+
+                case 7:
+                    if (loanAccount != null) {
+                        System.out.printf("Outstanding Loan: %.2f\n",
+                                loanAccount.getPrincipalAmt());
+                    } else {
+                        System.out.println("No loan found");
+                    }
+                    break;
+
+                case 0:
                     System.out.println("Exiting...");
                     return;
 

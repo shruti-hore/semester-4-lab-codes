@@ -11,5 +11,7 @@ public class Transaction {
             this.type = type;
         }
 
-
+        public String toString() {
+            return txnID + " | " + date + " | " + amount + " | " + type;
+        }
 }

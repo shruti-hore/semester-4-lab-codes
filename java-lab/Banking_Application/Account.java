@@ -24,10 +24,10 @@ public class Account {
         return accNum;
     }
 
-    public void deposit(double amount) {
+    public boolean deposit(double amount) {
         if (amount <= 0) {
             System.out.println("Invalid amount");
-            return;
+            return false;
         }
 
         balance += amount;
@@ -38,25 +38,28 @@ public class Account {
         transactions.add(t);
 
         System.out.println("New balance = " + balance);
+        return true;
     }
 
-    public void withdraw(double amount) {
+    public boolean withdraw(double amount) {
         if (amount <= 0) {
             System.out.println("Invalid amount");
-            return;
+            return false;
         }
 
         if (amount > balance) {
             System.out.println("Insufficient balance");
-        } 
-        
+            return false;
+        }
+
         balance -= amount;
+
         Transaction t = new Transaction(
-        String.valueOf(transactions.size()+1), "Today", amount, "Debit");
+            String.valueOf(transactions.size()+1), "Today", amount, "Debit");
 
         transactions.add(t);
 
         System.out.println("New balance = " + balance);
-        
+        return true;
     }
 }

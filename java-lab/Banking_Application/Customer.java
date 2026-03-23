@@ -28,8 +28,8 @@ public class Customer {
 
     // view account
     public void viewAccounts() {
-        for(Account acc : accounts) {
-            System.out.println(acc.getAccNum());
+        for (Account acc : accounts) {
+            System.out.println(acc);
         }
     }
 }
