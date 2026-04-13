@@ -1,0 +1,5 @@
+studentId,name,branch,marks1,marks2,marks3,marks4,marks5,percentage
+101,Alice,CS,85.0,90.0,78.0,88.0,92.0,86.60
+103,Charlie,CS,80.0,70.0,60.0,80.0,85.0,75.00
+104,David,ME,55.0,65.0,75.0,80.0,85.0,72.00
+105,Eve,EE,90.0,85.0,80.0,80.0,85.0,84.00
